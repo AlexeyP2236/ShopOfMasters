@@ -202,8 +202,6 @@ public class AdminController {
         if (bindingResult.hasErrors()){
             return "admin/editOrder";
         }
-//        Order stat = new Order();
-//        stat.setStatus(order);
         ordersService.editOrder(order);
         return "redirect:/admin/orders";
     }

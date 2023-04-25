@@ -68,7 +68,7 @@ public class MainController {
     //        model.addAttribute("person", new Person());
     //        return "registration";
     //    }
-    //Метод регистрации, упрощенный метод
+    //Метод регистрации, упрощенный метод которы выше
     @GetMapping("/registration")
     public String registration(@ModelAttribute("person") Person person){
         return "registration";
@@ -135,7 +135,6 @@ public class MainController {
         model.addAttribute("value_search", search);
         model.addAttribute("value_price_ot", ot);
         model.addAttribute("value_price_do", Do);
-        //System.out.println(search);
         return "/user/index";
 
     }

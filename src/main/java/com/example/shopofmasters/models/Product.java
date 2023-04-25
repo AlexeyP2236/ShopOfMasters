@@ -68,14 +68,13 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<Order> orderList;
 
-    public Product(String title, String description, float price, String warehouse, String seller, Category category, LocalDateTime dateTime, List<Image> imageList) {
+    public Product(String title, String description, float price, String warehouse, String seller, Category category, List<Image> imageList) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.warehouse = warehouse;
         this.seller = seller;
         this.category = category;
-        //this.dateTime = dateTime;
         this.imageList = imageList;
     }
 

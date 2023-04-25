@@ -48,16 +48,8 @@ public class PersonService {
     @Transactional
     public void rolePerson(Person person) {
         personRepository.findById(person.getId()).ifPresent(i -> {
-            //i.setLogin(person.getLogin());
-            //i.setPassword(person.getPassword());
             i.setRole(person.getRole());
             personRepository.save(i);
         });
     }
-
-//    @Transactional
-//    public void rolePerson(int id, Person person){
-//        person.setId(id);
-//        personRepository.save(person);
-//    }
 }
