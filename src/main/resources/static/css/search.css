@@ -1,0 +1,23 @@
+.search fieldset{
+    border-radius: 5px;
+    padding: 7px;
+}
+.search-button {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 100%;
+    border: 2px solid;
+    padding: 7px;
+    border-radius: 10px;
+    background: lightblue;
+}
+
+.search input {
+    width: auto;
+    height: auto;
+}
+
+.search-button:hover {
+    border: 2px solid black;
+    color: blue;
+    cursor: pointer
+}

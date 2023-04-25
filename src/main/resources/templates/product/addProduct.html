@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Добавление товара</title>
+  <link th:href="@{/css/header.css}" type="text/css" rel="stylesheet">
+  <link th:href="@{/css/CSS.css}" type="text/css" rel="stylesheet">
+  <link th:href="@{/css/main.css}" type="text/css" rel="stylesheet">
+  <link th:href="@{/css/footer.css}" type="text/css" rel="stylesheet">
+  <link th:href="@{/css/search.css}" type="text/css" rel="stylesheet">
+</head>
+<body>
+<header>
+  <div class="div-button">
+    <form method="post" action="/logout">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+      <button type="submit">Выйти из личного кабинета</button>
+    </form>
+  </div>
+  <h3 id="titles">Добавление товара</h3>
+  <div class="div-header">
+    <a class="header-button" th:href="@{/admin}">Главная</a>
+    <a class="header-button" th:href="@{/admin/product/add}">Добавить товар</a>
+    <a class="header-button" th:href="@{/admin/orders}">Заказы</a>
+    <a class="header-button" th:href="@{/admin/person}">Пользователи</a>
+  </div>
+</header>
+<main>
+  <form th:method="POST" th:action="@{/admin/product/add}" th:object="${product}" enctype="multipart/form-data">
+    <label for="title">Введите наименование товара: </label>
+    <br>
+    <input type="text" th:field="*{title}" placeholder="Наименование" id="title">
+    <div class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+    <br>
+    <label for="description">Введите описание товара: </label>
+    <br>
+    <textarea th:field="*{description}" placeholder="Описание" id="description"></textarea>
+    <div class="error"  th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+    <br>
+    <label for="price">Введите цену товара: </label>
+    <br>
+    <input type="number" th:field="*{price}" min="1" step="0.00" placeholder="Цена" id="price">
+    <div class="error"  th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+    <br>
+    <label for="warehouse">Введите cклад, на котором расположен товар: </label>
+    <br>
+    <input type="text" th:field="*{warehouse}" placeholder="Cклад" id="warehouse">
+    <div class="error"  th:if="${#fields.hasErrors('warehouse')}" th:errors="*{warehouse}"></div>
+    <br>
+    <label for="category">Выберите категорию товара: </label>
+    <br>
+    <select name="category" th:field="*{category}" id="category">
+      <div th:each="element : ${category}">
+        <option th:text="${element.getName()}" th:value="${element.getId()}">
+      </div>
+    </select>
+    <div class="error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+    <br>
+    <label for="seller">Введите данные о продавце: </label>
+    <br>
+    <textarea th:field="*{seller}" placeholder="Продавец" id="seller"></textarea>
+    <div class="error"  th:if="${#fields.hasErrors('seller')}" th:errors="*{seller}"></div>
+    <br>
+    <p class="error">Вы можете добавить до 5 фотографий. Первая фотография не может быть пустой т.к они будет являтся главной при выводе карточки товара</p>
+    <input type="file" name="file_one">
+    <br>
+    <input type="file" name="file_two">
+    <br>
+    <input type="file" name="file_three">
+    <br>
+    <input type="file" name="file_four">
+    <br>
+    <input type="file" name="file_five">
+    <br>
+    <button type="submit" >Добавить</button>
+  </form>
+</main>
+<footer>
+  <ul>
+    <li><a th:href="@{/admin}">Главная</a></li>
+    <li><a th:href="@{/admin/product/add}">Добавить товар</a></li>
+    <li><a th:href="@{/admin/orders}">Заказы</a></li>
+    <li><a th:href="@{/admin/person}">Пользователи</a></li>
+  </ul>
+</footer>
+</body>
+</html>

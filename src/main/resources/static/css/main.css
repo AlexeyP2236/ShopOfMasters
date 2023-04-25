@@ -1,0 +1,88 @@
+main {
+    text-align: justify;
+}
+
+main div {
+    float: left;
+    margin: 5px;
+    width: 99%;
+    border-bottom: black 1px solid;
+}
+
+.main-button{
+    float: left;
+    border: 2px solid black;
+    margin: 2px;
+    padding: 7px;
+    border-radius: 10px;
+    background: lightblue;
+    width: auto;
+}
+
+.main-button:hover{
+    color: blue;
+}
+
+main img{
+    width: 250px;
+    float: right;
+    margin: 10px;
+}
+
+main button{
+
+    margin: 10px 0px 0px;
+    padding: 7px;
+    border-radius: 10px;
+    background: lightblue;
+    width: auto;
+    cursor: pointer;
+}
+main button:hover{
+    color: blue;
+}
+main input {
+    height: 20px;
+    width: 300px;
+    margin: 10px;
+}
+
+main textarea{
+    width: 600px;
+    height: 80px;
+    margin: 10px;
+}
+
+main select {
+    margin: 10px;
+}
+
+p{
+    padding: 5px;
+}
+
+.input-button{
+    margin: 10px 0px 0px;
+    padding: 7px;
+    border-radius: 10px;
+    background: lightblue;
+    width: auto;
+    cursor: pointer;
+}
+
+.input-button:hover{
+    color: blue;
+}
+
+.div-image {
+    float: left;
+    width: auto;
+    border-bottom: none;
+}
+
+.image{
+    width: 200px;
+    float: none;
+    vertical-align: top;
+    margin: 10px;
+}

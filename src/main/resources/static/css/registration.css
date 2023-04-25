@@ -1,0 +1,80 @@
+body{
+    display: grid;
+    font-family: 'Times New Roman', Times, serif;
+    grid-template-rows: 1fr ;
+    grid-template-areas:
+            "div";
+    background: #e5effd;
+}
+
+div{
+    grid-area: div;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: blue;
+}
+
+.error{
+    color: red;
+    border-bottom: none;
+    width: auto
+}
+
+
+
+div {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+button{
+    margin: 10px 0 0;
+    padding: 7px;
+    border-radius: 10px;
+    background: lightblue;
+    width: 100%;
+    cursor: pointer;
+}
+
+button:hover{
+    color: blue;
+}
+
+.button-authentication{
+    float: left;
+    border: 2px solid black;
+    margin: 2px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    background: lightblue;
+    width: auto;
+}
+
+.button-authentication:hover{
+    color: blue;
+}
+
+.button-registration{
+    float: left;
+    border: 2px solid black;
+    margin: 2px;
+    padding: 6px 67px;
+    border-radius: 10px;
+    background: lightblue;
+    width: auto;
+}
+
+.button-registration:hover{
+    color: blue;
+}

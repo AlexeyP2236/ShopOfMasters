@@ -1,0 +1,59 @@
+body{
+    font-family: 'Times New Roman', Times, serif;
+    background: aliceblue;
+    display: grid;
+    grid-template-rows: 130px 1fr 100px;
+    grid-template-areas:
+            "header"
+            "main"
+            "footer";
+    height: 97vh;
+}
+
+header{
+    grid-area: header;
+}
+
+main{
+    background: #e5effd;
+
+    grid-area: main;
+}
+
+footer{
+    grid-area: footer;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    color: blue;
+}
+
+.back {
+    display: flex;
+    justify-content: flex-end;
+    align-self: flex-end;
+    padding: 10px;
+    margin: 10px;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+    background: none;
+
+}
+
+.back img {
+    width: 50px;
+
+}
+
+.error{
+    color: red;
+    border-bottom: none;
+    width: auto
+}
+

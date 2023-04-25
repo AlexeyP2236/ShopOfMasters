@@ -1,0 +1,21 @@
+footer {
+    margin: 5px 5px;
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: flex-start;
+}
+
+footer li {
+    list-style-type: none;
+}
+
+.footer-button {
+    padding: 7px;
+    border-radius: 10px;
+    background: lightblue;
+    width: auto;
+}

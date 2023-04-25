@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+    <link th:href="@{/css/header.css}" type="text/css" rel="stylesheet">
+    <link th:href="@{/css/CSS.css}" type="text/css" rel="stylesheet">
+    <link th:href="@{/css/main.css}" type="text/css" rel="stylesheet">
+    <link th:href="@{/css/footer.css}" type="text/css" rel="stylesheet">
+    <link th:href="@{/css/search.css}" type="text/css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <div class="div-button">
+        <form method="post" action="/logout">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit">Выйти из личного кабинета</button>
+        </form>
+    </div>
+    <h3 id="titles">Пользователи</h3>
+    <div class="div-header">
+        <a class="header-button" th:href="@{/admin}">Главная</a>
+        <a class="header-button" th:href="@{/admin/product/add}">Добавить товар</a>
+        <a class="header-button" th:href="@{/admin/orders}">Заказы</a>
+        <a class="header-button" th:href="@{/admin/person}">Пользователи</a>
+    </div>
+</header>
+<main>
+    <div th:each="person : ${persons}">
+        <p th:text="'Id: ' + ${person.getId()}"></p>
+        <p th:text="'Логин: ' + ${person.getLogin()}"></p>
+        <p th:text="'Роль: ' + ${person.getRole()}"></p>
+        <a class="main-button" th:href="@{/admin/person/{id}(id=${person.getId()})}">Смена роли</a>
+    </div>
+</main>
+<footer>
+    <ul>
+        <li><a th:href="@{/admin}">Главная</a></li>
+        <li><a th:href="@{/admin/product/add}">Добавить товар</a></li>
+        <li><a th:href="@{/admin/orders}">Заказы</a></li>
+        <li><a th:href="@{/admin/person}">Пользователи</a></li>
+    </ul>
+</footer>
+</body>
+</html>
