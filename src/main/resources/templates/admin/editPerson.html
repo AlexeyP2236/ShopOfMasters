@@ -26,9 +26,59 @@
     </div>
 </header>
 <main>
-    <p th:text="'Id: ' + ${person.getId()} + 'Логин: ' + ${person.getLogin()}">id+login</p>
+    <p th:text="'Id: ' + ${person.getId()} + ' Логин: ' + ${person.getLogin()}">id+login</p>
     <div style="border-bottom: none">
-        <form th:method="POST" th:action="@{/admin/person/{id}(id=${person.getId()})}" th:object="${person}" enctype="multipart/form-data">
+        <form class="search" th:method="POST" th:action="@{/admin/person/{id}(id=${person.getId()})}" th:object="${person}" enctype="multipart/form-data">
+            <label>Логин: </label>
+            <input type="text" th:field="*{login}">
+            <br>,2
+            <div class="error" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></div>
+            <br>
+            <label for="firstName">Введите Имя: </label>
+            <input type="text" th:field="*{firstName}" id="firstName">
+            <br>
+            <div class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+            <br>
+            <label for="lastName">Введите Фамилию: </label>
+            <br>
+            <input type="text" th:field="*{lastName}" id="lastName">
+            <br>
+            <div class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+            <br>
+            <label for="patronymic">Введите отчество: </label>
+            <br>
+            <input type="text" th:field="*{patronymic}" id="patronymic">
+            <br>
+            <div class="error" th:if="${#fields.hasErrors('patronymic')}" th:errors="*{patronymic}"></div>
+            <br>
+            <label for="age">Введите возраст: </label>
+            <br>
+            <input type="number" th:field="*{age}" id="age">
+            <br>
+            <div class="error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+            <br>
+            <label for="telephone">Введите телефон: </label>
+            <br>
+            <input type="text" th:field="*{telephone}" id="telephone">
+            <br>
+            <div class="error" th:if="${#fields.hasErrors('telephone')}" th:errors="*{telephone}"></div>
+            <br>
+            <label for="dateBirth">Введите дату рождения: </label>
+            <br>
+            <input type="date" th:field="*{dateBirth}" id="dateBirth">
+            <br>
+            <div class="error" th:if="${#fields.hasErrors('dateBirth')}" th:errors="*{dateBirth}"></div>
+            <br>
+            <label for="biography">Биография</label>
+            <br>
+            <textarea type="text" th:field="*{biography}" id="biography"></textarea>
+            <br>
+            <label for="confirmed">Подтвержденный</label>
+            <select th:field="*{confirmed}"  id="confirmed">
+                <option th:each="enum : ${T(com.example.shopofmasters.enumm.Confirmed).values()}" th:text="${enum.getConfirmedValue()}" th:value="${enum}"></option>
+            </select>-->
+            <br>
+
             <input type="text" th:field="*{role}">
             <br>
             <button type="submit">Изменить</button>

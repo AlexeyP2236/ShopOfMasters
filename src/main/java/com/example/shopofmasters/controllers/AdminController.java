@@ -1,5 +1,6 @@
 package com.example.shopofmasters.controllers;
 
+import com.example.shopofmasters.config.ValidatedDataPerson;
 import com.example.shopofmasters.models.*;
 import com.example.shopofmasters.repositories.CategoryRepository;
 import com.example.shopofmasters.services.OrdersService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -215,12 +217,17 @@ public class AdminController {
     @GetMapping("admin/person/{id}")
     public String getPerson(Model model, @PathVariable("id") int id){
         model.addAttribute("person", personService.getPersonId(id));
-        return "/admin/editPerson";
+        return "admin/editPerson";
     }
 
     @PostMapping("admin/person/{id}")
-    public String roleAdmin(@ModelAttribute("person") Person person,  @PathVariable("id") int id){
+    public String roleAdmin(@ModelAttribute("person") @Validated(ValidatedDataPerson.class) Person person, BindingResult bindingResult, @PathVariable("id") int id){
+        if (bindingResult.hasErrors()){
+            return "admin/editPerson";
+        }
         personService.rolePerson(person);
+        personService.addInfoPerson(person);
+        personService.confirmedPerson(person);
         return "redirect:/admin/person";
     }
 }

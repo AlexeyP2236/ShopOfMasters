@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-//copy
 @Entity
 public class Product {
 
@@ -68,6 +67,8 @@ public class Product {
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<Order> orderList;
 
+
+
     public Product(String title, String description, float price, String warehouse, String seller, Category category, List<Image> imageList) {
         this.title = title;
         this.description = description;
@@ -77,6 +78,8 @@ public class Product {
         this.category = category;
         this.imageList = imageList;
     }
+
+
 
     public Product() {
     }

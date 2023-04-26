@@ -30,7 +30,7 @@
         <p th:text="'Id: ' + ${person.getId()}"></p>
         <p th:text="'Логин: ' + ${person.getLogin()}"></p>
         <p th:text="'Роль: ' + ${person.getRole()}"></p>
-        <a class="main-button" th:href="@{/admin/person/{id}(id=${person.getId()})}">Смена роли</a>
+        <a class="main-button" th:href="@{/admin/person/{id}(id=${person.getId()})}">Редактировать</a>
     </div>
 </main>
 <footer>

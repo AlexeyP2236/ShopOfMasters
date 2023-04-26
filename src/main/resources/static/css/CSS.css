@@ -54,6 +54,7 @@ a:hover {
 .error{
     color: red;
     border-bottom: none;
-    width: auto
+    width: auto;
+    float: unset;
 }
 

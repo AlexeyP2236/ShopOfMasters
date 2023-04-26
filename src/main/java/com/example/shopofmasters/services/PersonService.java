@@ -13,6 +13,7 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     public PersonService(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
@@ -50,6 +51,26 @@ public class PersonService {
         personRepository.findById(person.getId()).ifPresent(i -> {
             i.setRole(person.getRole());
             personRepository.save(i);
+        });
+    }
+    @Transactional
+    public void addInfoPerson(Person person) {
+        personRepository.findById(person.getId()).ifPresent(i -> {
+            i.setLogin(person.getLogin());
+            i.setFirstName(person.getFirstName());
+            i.setLastName(person.getLastName());
+            i.setPatronymic(person.getPatronymic());
+            i.setAge(person.getAge());
+            i.setTelephone(person.getTelephone());
+            i.setDateBirth(person.getDateBirth());
+            i.setBiography(person.getBiography());
+            personRepository.save(i);
+        });
+    }
+    @Transactional
+    public void confirmedPerson(Person person) {
+        personRepository.findById(person.getId()).ifPresent(i -> {
+            i.setConfirmed(person.getConfirmed());
         });
     }
 }

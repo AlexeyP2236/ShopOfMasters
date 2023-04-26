@@ -58,7 +58,7 @@ public class SecurityConfig{
 
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(personDetailsService)
-                //хеширование паролей
+                //кеширование паролей
                 .passwordEncoder(getPasswordEncode());
     }
 }

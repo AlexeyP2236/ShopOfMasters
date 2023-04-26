@@ -86,3 +86,12 @@ p{
     vertical-align: top;
     margin: 10px;
 }
+
+main h3 {
+    text-align: center;
+    color: darkblue;
+}
+
+main label {
+    clear: left;
+}
