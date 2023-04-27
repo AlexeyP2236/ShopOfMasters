@@ -1,6 +1,7 @@
 package com.example.shopofmasters.controllers;
 
 
+import com.example.shopofmasters.util.ValidatedDataPerson;
 import com.example.shopofmasters.enumm.Status;
 import com.example.shopofmasters.models.Cart;
 import com.example.shopofmasters.models.Order;
@@ -19,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -236,5 +238,21 @@ public class MainController {
         return "/user/orders";
     }
 
+    @GetMapping("/cabinet")
+    public String getPerson(Model model){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        int id_person = personDetails.getPerson().getId();
+        model.addAttribute("person", personService.getPersonId(id_person));
+        return "user/privateCabinet";
+    }
 
+    @PostMapping("/cabinet/{id}")
+    public String roleAdmin(@ModelAttribute("person") @Validated(ValidatedDataPerson.class) Person person, BindingResult bindingResult, @PathVariable("id") int id){
+        if (bindingResult.hasErrors()){
+            return "user/privateCabinet";
+        }
+        personService.addInfoPerson(id, person);
+        return "redirect:/person_account";
+    }
 }

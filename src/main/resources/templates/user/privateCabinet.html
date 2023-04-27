@@ -17,18 +17,18 @@
             <button type="submit">Выйти из личного кабинета</button>
         </form>
     </div>
-    <h3 id="titles">Просмотр пользователя</h3>
+    <h3 id="titles">Личные данные</h3>
     <div class="div-header">
-        <a class="header-button" th:href="@{/admin}">Главная</a>
-        <a class="header-button" th:href="@{/admin/product/add}">Добавить товар</a>
-        <a class="header-button" th:href="@{/admin/orders}">Заказы</a>
-        <a class="header-button" th:href="@{/admin/person}">Пользователи</a>
+        <a class="header-button" th:href="@{/person_account}">Главная</a>
+        <a class="header-button" th:href="@{/orders}">Заказы</a>
+        <a class="header-button" th:href="@{/cart}">Корзина</a>
+        <a class="header-button" th:href="@{/cabinet}">Личные данные</a>
     </div>
 </header>
 <main>
-    <p th:text="'Id: ' + ${person.getId()} + ' Логин: ' + ${person.getLogin()}">id+login</p>
+    <p th:text="'Логин: ' + ${person.getLogin()}">id+login</p>
     <div style="border-bottom: none">
-        <form class="search" th:method="POST" th:action="@{/admin/person/{id}(id=${person.getId()})}" th:object="${person}" enctype="multipart/form-data">
+        <form class="search" th:method="POST" th:action="@{/cabinet/{id}(id=${person.getId()})}" th:object="${person}" enctype="multipart/form-data">
             <label for="firstName">Введите Имя: </label>
             <br>
             <input type="text" th:field="*{firstName}" id="firstName">
@@ -69,24 +69,16 @@
             <br>
             <textarea type="text" th:field="*{biography}" id="biography"></textarea>
             <br>
-            <label for="confirmed">Подтвержденный</label>
-            <select th:field="*{confirmed}"  id="confirmed">
-                <option th:each="enum : ${T(com.example.shopofmasters.enumm.Confirmed).values()}" th:text="${enum.getConfirmedValue()}" th:value="${enum}"></option>
-            </select>-->
-            <br>
-
-            <input type="text" th:field="*{role}">
-            <br>
             <button type="submit">Изменить</button>
         </form>
     </div>
 </main>
 <footer>
     <ul>
-        <li><a th:href="@{/admin}">Главная</a></li>
-        <li><a th:href="@{/admin/product/add}">Добавить товар</a></li>
-        <li><a th:href="@{/admin/orders}">Заказы</a></li>
-        <li><a th:href="@{/admin/person}">Пользователи</a></li>
+        <li><a th:href="@{/person_account}">Главная</a></li>
+        <li><a th:href="@{/orders}">Заказы</a></li>
+        <li><a th:href="@{/cart}">Корзина</a></li>
+        <li><a th:href="@{/cabinet}">Личные данные</a></li>
     </ul>
 </footer>
 </body>

@@ -14,12 +14,12 @@
         <label for="login">Введите логин: </label>
         <br>
         <input type="text" th:field="*{login}" id="login">
-        <div th:if="${#fields.hasErrors('login')}" th:errors="*{login}" class="error" style="border-bottom: none; width: auto"></div>
+        <div th:if="${#fields.hasErrors('login')}" th:errors="*{login}" class="error" style="border-bottom: none; width: 146px;"></div>
         <br>
         <label for="password">Введите пароль: </label>
         <br>
         <input type="password" th:field="*{password}" id="password">
-        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error" style="border-bottom: none; width: auto"></div>
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error" style="border-bottom: none; width: 146px;"></div>
         <br>
         <button type="submit">Зарегистрироваться</button>
     </form>

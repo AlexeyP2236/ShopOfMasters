@@ -1,6 +1,6 @@
 package com.example.shopofmasters.controllers;
 
-import com.example.shopofmasters.config.ValidatedDataPerson;
+import com.example.shopofmasters.util.ValidatedDataPerson;
 import com.example.shopofmasters.models.*;
 import com.example.shopofmasters.repositories.CategoryRepository;
 import com.example.shopofmasters.services.OrdersService;
@@ -215,7 +215,7 @@ public class AdminController {
     }
 
     @GetMapping("admin/person/{id}")
-    public String getPerson(Model model, @PathVariable("id") int id){
+    public String editPerson(Model model, @PathVariable("id") int id){
         model.addAttribute("person", personService.getPersonId(id));
         return "admin/editPerson";
     }
@@ -226,7 +226,7 @@ public class AdminController {
             return "admin/editPerson";
         }
         personService.rolePerson(person);
-        personService.addInfoPerson(person);
+        //personService.addInfoPerson(person);
         personService.confirmedPerson(person);
         return "redirect:/admin/person";
     }

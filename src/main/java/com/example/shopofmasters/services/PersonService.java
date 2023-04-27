@@ -1,5 +1,6 @@
 package com.example.shopofmasters.services;
 
+import com.example.shopofmasters.enumm.Confirmed;
 import com.example.shopofmasters.models.Person;
 import com.example.shopofmasters.repositories.PersonRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,7 @@ public class PersonService {
         //хеширование паролей при регистрации
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         person.setRole("ROLE_USER"); //роль по умолчанию
+        person.setConfirmed(Confirmed.Пользователь);
         personRepository.save(person);
     }
 
@@ -45,18 +47,26 @@ public class PersonService {
         return optionalPerson.orElse(null);
     }
 
-    //Смена роли у пользователя
+    //Заполнение/смена данных пользователя, в том числе роли
     @Transactional
     public void rolePerson(Person person) {
         personRepository.findById(person.getId()).ifPresent(i -> {
+            i.setFirstName(person.getFirstName());
+            i.setLastName(person.getLastName());
+            i.setPatronymic(person.getPatronymic());
+            i.setAge(person.getAge());
+            i.setTelephone(person.getTelephone());
+            i.setDateBirth(person.getDateBirth());
+            i.setBiography(person.getBiography());
             i.setRole(person.getRole());
             personRepository.save(i);
         });
     }
+    //Заполнение/смена данных пользователя по id
     @Transactional
-    public void addInfoPerson(Person person) {
+    public void addInfoPerson(int id, Person person) {
+        person.setId(id);
         personRepository.findById(person.getId()).ifPresent(i -> {
-            i.setLogin(person.getLogin());
             i.setFirstName(person.getFirstName());
             i.setLastName(person.getLastName());
             i.setPatronymic(person.getPatronymic());

@@ -1,10 +1,11 @@
 package com.example.shopofmasters.models;
 
-import com.example.shopofmasters.config.ValidatedAuthorization;
-import com.example.shopofmasters.config.ValidatedDataPerson;
 import com.example.shopofmasters.enumm.Confirmed;
+import com.example.shopofmasters.util.ValidatedDataPerson;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 //copy
 @Entity
+//@DynamicUpdate
 @Table(name = "Person")
 public class Person {
     @Id
@@ -19,13 +21,16 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotEmpty(message = "Логин не может быть пустым", groups = {ValidatedAuthorization.class, ValidatedDataPerson.class}) //групповая валидация
+    //@NotEmpty(message = "Логин не может быть пустым")
+    //, groups = {ValidatedAuthorization.class, ValidatedDataPerson.class}) //групповая валидация
     // Источник https://www.baeldung.com/spring-valid-vs-validated
-    @Size(min = 5, max = 100, message = "Логин должен быть от 5 до 100 символов", groups = ValidatedAuthorization.class)
+    //@Size(min = 5, max = 100, message = "Логин должен быть от 5 до 100 символов")
+    //, groups = ValidatedAuthorization.class)
     @Column(name = "login")
     private String login;
 
-    @NotEmpty(message = "Пароль не может быть пустым", groups = ValidatedAuthorization.class)
+    //NotEmpty(message = "Пароль не может быть пустым")
+    //, groups = ValidatedAuthorization.class)
     @Column(name = "password")
     private String password;
 
@@ -34,17 +39,28 @@ public class Person {
 
     //DataPerson
     @NotEmpty(message = "Строка не может быть пустой", groups = ValidatedDataPerson.class)
+    @Pattern(regexp = "^[а-яА-ЯёЁ]+$", message = "Ввод только кириллицы", groups = ValidatedDataPerson.class)
+    @Size(max = 30, message = "Строка должна быть в диапазоне до 30 символов", groups = ValidatedDataPerson.class)
+    @Column(name = "first_name", length = 30)
     private String firstName;
     @NotEmpty(message = "Строка не может быть пустой", groups = ValidatedDataPerson.class)
+    @Size(max = 30, message = "Строка должна быть в диапазоне до 30 символов", groups = ValidatedDataPerson.class)
+    @Pattern(regexp = "^[а-яА-ЯёЁ]+$", message = "Ввод только кириллицы", groups = ValidatedDataPerson.class)
     private String lastName;
-    @NotEmpty(message = "Строка не может быть пустой", groups = ValidatedDataPerson.class)
+    @Pattern(regexp = "^[а-яА-ЯёЁ]+$", message = "Ввод только кириллицы", groups = ValidatedDataPerson.class)
+    @Size(max = 30, message = "Строка должна быть в диапазоне до 30 символов", groups = ValidatedDataPerson.class)
     private String patronymic;
+    @Min(value = 18, message = "Возраст не может быть меньше 18", groups = ValidatedDataPerson.class)
+    @Size(max = 3, message = "Введите корректные данные", groups = ValidatedDataPerson.class)
     @NotEmpty(message = "Строка не может быть пустой", groups = ValidatedDataPerson.class)
     private String age;
     @NotEmpty(message = "Строка не может быть пустой", groups = ValidatedDataPerson.class)
+    @Size(max = 15, message = "Строка должна быть в диапазоне до 15 символов", groups = ValidatedDataPerson.class)
+    @Pattern(regexp = "^((\\+7|7|8)+([0-9]){10})$", message = "Номер телефона должен быть в формате +7/7/80000000", groups = ValidatedDataPerson.class)
     private String telephone;
     @NotEmpty(message = "Строка не может быть пустой", groups = ValidatedDataPerson.class)
     private String dateBirth;
+    @Column (columnDefinition = "text")
     private String biography;
     private Confirmed confirmed;
 

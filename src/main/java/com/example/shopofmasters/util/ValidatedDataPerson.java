@@ -1,4 +1,4 @@
-package com.example.shopofmasters.config;
+package com.example.shopofmasters.util;
 
 public interface ValidatedDataPerson {
 }
