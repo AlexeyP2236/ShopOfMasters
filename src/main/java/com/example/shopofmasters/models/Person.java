@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
-//copy
+
 @Entity
 //@DynamicUpdate
 @Table(name = "Person")
@@ -21,16 +21,15 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //@NotEmpty(message = "Логин не может быть пустым")
+    @NotEmpty(message = "Логин не может быть пустым")
     //, groups = {ValidatedAuthorization.class, ValidatedDataPerson.class}) //групповая валидация
     // Источник https://www.baeldung.com/spring-valid-vs-validated
-    //@Size(min = 5, max = 100, message = "Логин должен быть от 5 до 100 символов")
+    @Size(min = 5, max = 100, message = "Логин должен быть от 5 до 100 символов")
     //, groups = ValidatedAuthorization.class)
     @Column(name = "login")
     private String login;
 
-    //NotEmpty(message = "Пароль не может быть пустым")
-    //, groups = ValidatedAuthorization.class)
+    @NotEmpty(message = "Пароль не может быть пустым")
     @Column(name = "password")
     private String password;
 
