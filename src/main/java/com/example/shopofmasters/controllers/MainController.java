@@ -1,7 +1,6 @@
 package com.example.shopofmasters.controllers;
 
 
-import com.example.shopofmasters.util.ValidatedDataPerson;
 import com.example.shopofmasters.enumm.Status;
 import com.example.shopofmasters.models.Cart;
 import com.example.shopofmasters.models.Order;
@@ -9,11 +8,12 @@ import com.example.shopofmasters.models.Person;
 import com.example.shopofmasters.models.Product;
 import com.example.shopofmasters.repositories.CartRepository;
 import com.example.shopofmasters.repositories.OrderRepository;
-import com.example.shopofmasters.repositories.ProductRepository;
 import com.example.shopofmasters.security.PersonDetails;
 import com.example.shopofmasters.services.PersonService;
 import com.example.shopofmasters.services.ProductService;
+import com.example.shopofmasters.services.SearchService;
 import com.example.shopofmasters.util.PersonValidator;
+import com.example.shopofmasters.util.ValidatedDataPerson;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,8 +31,6 @@ import java.util.UUID;
 @Controller
 public class MainController {
 
-    private final ProductRepository productRepository;
-
     private final PersonValidator personValidator;
     private final PersonService personService;
 
@@ -42,13 +40,15 @@ public class MainController {
 
     private final OrderRepository orderRepository;
 
-    public MainController(ProductRepository productRepository, PersonValidator personValidator, PersonService personService, ProductService productService, CartRepository cartRepository, OrderRepository orderRepository) {
-        this.productRepository = productRepository;
+    private final SearchService searchService;
+
+    public MainController(PersonValidator personValidator, PersonService personService, ProductService productService, CartRepository cartRepository, OrderRepository orderRepository, SearchService searchService) {
         this.personValidator = personValidator;
         this.personService = personService;
         this.productService = productService;
         this.cartRepository = cartRepository;
         this.orderRepository = orderRepository;
+        this.searchService = searchService;
     }
 
     @GetMapping("/person_account")
@@ -104,34 +104,34 @@ public class MainController {
                 if(price.equals("sorted_by_ascending_price")) {
                     if (!contract.isEmpty()) {
                         if (contract.equals("furniture")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 1));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceAsc(search, ot, Do, 1));
                         } else if (contract.equals("appliances")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 3));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceAsc(search, ot, Do, 3));
                         } else if (contract.equals("clothes")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 2));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceAsc(search, ot, Do, 2));
                         }
                     } else {
-                        model.addAttribute("search_product", productRepository.findByTitleOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do)));
+                        model.addAttribute("search_product", searchService.searchTitleOrderByPriceAsc(search, ot, Do));
                     }
                 } else if(price.equals("sorted_by_descending_price")){
                     if(!contract.isEmpty()){
                         System.out.println(contract);
                         if(contract.equals("furniture")){
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 1));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceDesc(search, ot, Do, 1));
                         }else if (contract.equals("appliances")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 3));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceDesc(search, ot, Do, 3));
                         } else if (contract.equals("clothes")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 2));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceDesc(search, ot, Do, 2));
                         }
                     }  else {
-                        model.addAttribute("search_product", productRepository.findByTitleOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do)));
+                        model.addAttribute("search_product", searchService.searchTitleOrderByPriceDesc(search, ot, Do));
                     }
                 }
             } else {
-                model.addAttribute("search_product", productRepository.findByTitleAndPriceGreaterThanEqualAndPriceLessThanEqual(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do)));
+                model.addAttribute("search_product", searchService.searchTitleAndPriceGreaterThanAndPriceLessThan(search, ot, Do));
             }
         } else {
-            model.addAttribute("search_product", productRepository.findByTitleContainingIgnoreCase(search));
+            model.addAttribute("search_product", searchService.searchTitleContainingIgnoreCase(search));
         }
 
         model.addAttribute("value_search", search);

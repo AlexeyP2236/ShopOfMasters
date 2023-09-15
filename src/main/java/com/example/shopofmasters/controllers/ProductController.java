@@ -1,7 +1,7 @@
 package com.example.shopofmasters.controllers;
 
-import com.example.shopofmasters.repositories.ProductRepository;
 import com.example.shopofmasters.services.ProductService;
+import com.example.shopofmasters.services.SearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("product")
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final SearchService searchService;
     private  final ProductService productService;
 
-    public ProductController(ProductRepository productRepository, ProductService productService) {
-        this.productRepository = productRepository;
+    public ProductController(SearchService searchService, ProductService productService) {
+        this.searchService = searchService;
         this.productService = productService;
     }
 
@@ -41,34 +41,34 @@ public class ProductController {
                 if(price.equals("sorted_by_ascending_price")) {
                     if (!contract.isEmpty()) {
                         if (contract.equals("furniture")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 1));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceAsc(search, ot, Do, 1));
                         } else if (contract.equals("appliances")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 3));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceAsc(search, ot, Do, 3));
                         } else if (contract.equals("clothes")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 2));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceAsc(search, ot, Do, 2));
                         }
                     } else {
-                        model.addAttribute("search_product", productRepository.findByTitleOrderByPriceAsc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do)));
+                        model.addAttribute("search_product", searchService.searchTitleOrderByPriceAsc(search, ot, Do));
                     }
                 } else if(price.equals("sorted_by_descending_price")){
                     if(!contract.isEmpty()){
                         System.out.println(contract);
                         if(contract.equals("furniture")){
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 1));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceDesc(search, ot, Do, 1));
                         }else if (contract.equals("appliances")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 3));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceDesc(search, ot, Do, 3));
                         } else if (contract.equals("clothes")) {
-                            model.addAttribute("search_product", productRepository.findByTitleAndCategoryOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do), 2));
+                            model.addAttribute("search_product", searchService.searchTitleAndCategoryOrderByPriceDesc(search, ot, Do, 2));
                         }
                     }  else {
-                        model.addAttribute("search_product", productRepository.findByTitleOrderByPriceDesc(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do)));
+                        model.addAttribute("search_product", searchService.searchTitleOrderByPriceDesc(search, ot, Do));
                     }
                 }
             } else {
-                model.addAttribute("search_product", productRepository.findByTitleAndPriceGreaterThanEqualAndPriceLessThanEqual(search.toLowerCase(), Float.parseFloat(ot), Float.parseFloat(Do)));
+                model.addAttribute("search_product", searchService.searchTitleAndPriceGreaterThanAndPriceLessThan(search, ot, Do));
             }
         } else {
-            model.addAttribute("search_product", productRepository.findByTitleContainingIgnoreCase(search));
+            model.addAttribute("search_product", searchService.searchTitleContainingIgnoreCase(search));
         }
 
         model.addAttribute("value_search", search);
