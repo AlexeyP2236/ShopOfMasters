@@ -1,14 +1,13 @@
 package com.example.shopofmasters.controllers;
 
 
-import com.example.shopofmasters.enumm.Status;
 import com.example.shopofmasters.models.Cart;
-import com.example.shopofmasters.models.Order;
 import com.example.shopofmasters.models.Person;
 import com.example.shopofmasters.models.Product;
 import com.example.shopofmasters.repositories.CartRepository;
 import com.example.shopofmasters.repositories.OrderRepository;
 import com.example.shopofmasters.security.PersonDetails;
+import com.example.shopofmasters.services.OrdersService;
 import com.example.shopofmasters.services.PersonService;
 import com.example.shopofmasters.services.ProductService;
 import com.example.shopofmasters.services.SearchService;
@@ -23,10 +22,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 
 @Controller
 public class MainController {
@@ -35,20 +30,15 @@ public class MainController {
     private final PersonService personService;
 
     private final ProductService productService;
-
-    private final CartRepository cartRepository;
-
-    private final OrderRepository orderRepository;
-
     private final SearchService searchService;
+    private final OrdersService ordersService;
 
-    public MainController(PersonValidator personValidator, PersonService personService, ProductService productService, CartRepository cartRepository, OrderRepository orderRepository, SearchService searchService) {
+    public MainController(PersonValidator personValidator, PersonService personService, ProductService productService, CartRepository cartRepository, OrderRepository orderRepository, SearchService searchService, OrdersService ordersService) {
         this.personValidator = personValidator;
         this.personService = personService;
         this.productService = productService;
-        this.cartRepository = cartRepository;
-        this.orderRepository = orderRepository;
         this.searchService = searchService;
+        this.ordersService = ordersService;
     }
 
     @GetMapping("/person_account")
@@ -142,7 +132,7 @@ public class MainController {
     }
 
     @GetMapping("/cart/add/{id}")
-    public String addProductInCart(@PathVariable("id") int id, Model model){
+    public String addProductInCart(@PathVariable("id") int id){
         // Получаем продукт по id
         Product product = productService.getProductId(id);
         // Извлекаем объект аутентифицированного пользователя
@@ -151,90 +141,39 @@ public class MainController {
         // Извлекаем id пользователя из объекта
         int id_person = personDetails.getPerson().getId();
         Cart cart = new Cart(id_person, product.getId());
-        cartRepository.save(cart);
+        ordersService.addCart(cart);
         return "redirect:/cart";
     }
 
     @GetMapping("/cart")
     public String cart(Model model){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        // Извлекаем id пользователя из объекта
-        int id_person = personDetails.getPerson().getId();
-
-        List<Cart> cartList = cartRepository.findByPersonId(id_person);
-        List<Product> productList = new ArrayList<>();
-
-        // Получаем продукты из корзины по id товара
-        for (Cart cart: cartList) {
-            productList.add(productService.getProductId(cart.getProductId()));
-        }
-
+        int id_person = personService.personIdSecurityContextHolder();
         // Вычисление итоговой цена
         float price = 0;
-        for (Product product: productList) {
+        for (Product product: ordersService.getOrderForPersonId(id_person)) {
             price += product.getPrice();
         }
-
         model.addAttribute("price", price);
-        model.addAttribute("cart_product", productList);
+        model.addAttribute("cart_product", ordersService.getOrderForPersonId(id_person));
         return "/user/cart";
     }
 
     @GetMapping("/cart/delete/{id}")
-    public String deleteProductFromCart(Model model, @PathVariable("id") int id){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        // Извлекаем id пользователя из объекта
-        int id_person = personDetails.getPerson().getId();
-        List<Cart> cartList = cartRepository.findByPersonId(id_person);
-        List<Product> productList = new ArrayList<>();
-
-        // Получаем продукты из корзины по id товара
-        for (Cart cart: cartList) {
-            productList.add(productService.getProductId(cart.getProductId()));
-        }
-        cartRepository.deleteCartByProductId(id);
+    public String deleteProductFromCart(@PathVariable("id") int id){
+        ordersService.deleteOrderForPersonId(id);
         return "redirect:/cart";
     }
 
     @GetMapping("/order/create")
     public String order(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        // Извлекаем id пользователя из объекта
-        int id_person = personDetails.getPerson().getId();
-
-        List<Cart> cartList = cartRepository.findByPersonId(id_person);
-        List<Product> productList = new ArrayList<>();
-
-        // Получаем продукты из корзины по id товара
-        for (Cart cart: cartList) {
-            productList.add(productService.getProductId(cart.getProductId()));
-        }
-
-        // Вычисление итоговой цена
-        float price = 0;
-        for (Product product: productList) {
-            price += product.getPrice();
-        }
-
-        String uuid = UUID.randomUUID().toString();
-        for(Product product : productList){
-            Order newOrder = new Order(uuid, product, personDetails.getPerson(), 1, product.getPrice(), Status.Оформлен);
-            orderRepository.save(newOrder);
-            //удаление с корзины
-            cartRepository.deleteCartByProductId(product.getId());
-        }
+        int id_person = personService.personIdSecurityContextHolder();
+        ordersService.saveAndDeleteCart(id_person);
         return "redirect:/orders";
     }
 
     @GetMapping("/orders")
     public String orderUser(Model model){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
-        List<Order> orderList = orderRepository.findByPerson(personDetails.getPerson());
-        model.addAttribute("orders", orderList);
+        model.addAttribute("orders", ordersService.getOrderId());
         return "/user/orders";
     }
 

@@ -1,13 +1,16 @@
 package com.example.shopofmasters.controllers;
 
-import com.example.shopofmasters.util.ValidatedDataPerson;
-import com.example.shopofmasters.models.*;
+import com.example.shopofmasters.models.Category;
+import com.example.shopofmasters.models.Order;
+import com.example.shopofmasters.models.Person;
+import com.example.shopofmasters.models.Product;
 import com.example.shopofmasters.repositories.CategoryRepository;
+import com.example.shopofmasters.services.CategoryService;
 import com.example.shopofmasters.services.OrdersService;
 import com.example.shopofmasters.services.PersonService;
 import com.example.shopofmasters.services.ProductService;
+import com.example.shopofmasters.util.ValidatedDataPerson;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,28 +18,22 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 @Controller
 public class AdminController {
 
     private final ProductService productService;
     private final OrdersService ordersService;
-
     private final PersonService personService;
-
-    //путь для хранения файлов
-    @Value("${upload.path}")
-    private String uploadPath;
-
+    private final CategoryService categoryService;
     private final CategoryRepository categoryRepository;
 
-    public AdminController(ProductService productService, OrdersService ordersService, PersonService personService, CategoryRepository categoryRepository) {
+    public AdminController(ProductService productService, OrdersService ordersService, PersonService personService, CategoryService categoryService, CategoryRepository categoryRepository) {
         this.productService = productService;
         this.ordersService = ordersService;
         this.personService = personService;
+        this.categoryService = categoryService;
         this.categoryRepository = categoryRepository;
     }
 
@@ -52,7 +49,7 @@ public class AdminController {
     public String addProduct(Model model){
         model.addAttribute("product", new Product());
         //подгрузка категорий
-        model.addAttribute("category", categoryRepository.findAll());
+        model.addAttribute("category", categoryService.getAllCategory());
         return "product/addProduct";
     }
 
@@ -68,85 +65,24 @@ public class AdminController {
         Category category_db = (Category) categoryRepository.findById(category).orElseThrow();
         //System.out.println(category_db.getName());
         if(bindingResult.hasErrors()){
-            model.addAttribute("category", categoryRepository.findAll());
+            model.addAttribute("category", categoryService.getAllCategory());
             return "product/addProduct";
         }
         //Добавление и проверка файла
         if(file_one != null){
-            File uploadDir = new File(uploadPath);
-            //Проверка на существование директории
-            if(!uploadDir.exists()){
-                //Создает директорию
-                uploadDir.mkdir();
-            }
-            //Генерация названий файла
-            String uuidFile = UUID.randomUUID().toString();
-            //Сгенерированное имя + оригинальное имя
-            String resultFileName = uuidFile + "." + file_one.getOriginalFilename();
-            //отправка файла по указаной директории
-            file_one.transferTo(new File(uploadPath + "/" + resultFileName));
-            //Добавление файла
-            Image image = new Image();
-            image.setProduct(product);
-            image.setFileName(resultFileName);
-            product.addImageToProduct(image);
-
+            productService.addPhotoFile(file_one, product);
         }
-
         if(file_two != null){
-            File uploadDir = new File(uploadPath);
-            if(!uploadDir.exists()){
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file_two.getOriginalFilename();
-            file_two.transferTo(new File(uploadPath + "/" + resultFileName));
-            Image image = new Image();
-            image.setProduct(product);
-            image.setFileName(resultFileName);
-            product.addImageToProduct(image);
+            productService.addPhotoFile(file_two, product);
         }
-
         if(file_three != null){
-            File uploadDir = new File(uploadPath);
-            if(!uploadDir.exists()){
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file_three.getOriginalFilename();
-            file_three.transferTo(new File(uploadPath + "/" + resultFileName));
-            Image image = new Image();
-            image.setProduct(product);
-            image.setFileName(resultFileName);
-            product.addImageToProduct(image);
+            productService.addPhotoFile(file_three, product);
         }
-
         if(file_four != null){
-            File uploadDir = new File(uploadPath);
-            if(!uploadDir.exists()){
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file_four.getOriginalFilename();
-            file_four.transferTo(new File(uploadPath + "/" + resultFileName));
-            Image image = new Image();
-            image.setProduct(product);
-            image.setFileName(resultFileName);
-            product.addImageToProduct(image);
+            productService.addPhotoFile(file_four, product);
         }
-
         if(file_five != null){
-            File uploadDir = new File(uploadPath);
-            if(!uploadDir.exists()){
-                uploadDir.mkdir();
-            }
-            String uuidFile = UUID.randomUUID().toString();
-            String resultFileName = uuidFile + "." + file_five .getOriginalFilename();
-            file_five .transferTo(new File(uploadPath + "/" + resultFileName));
-            Image image = new Image();
-            image.setProduct(product);
-            image.setFileName(resultFileName);
-            product.addImageToProduct(image);
+            productService.addPhotoFile(file_five, product);
         }
         productService.saveProduct(product, category_db);
         return "redirect:/admin";
@@ -226,7 +162,7 @@ public class AdminController {
             return "admin/editPerson";
         }
         personService.rolePerson(person);
-        //personService.addInfoPerson(person);
+        personService.addInfoPerson(id, person);
         personService.confirmedPerson(person);
         return "redirect:/admin/person";
     }

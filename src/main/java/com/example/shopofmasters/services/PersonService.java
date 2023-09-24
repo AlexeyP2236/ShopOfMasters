@@ -3,12 +3,16 @@ package com.example.shopofmasters.services;
 import com.example.shopofmasters.enumm.Confirmed;
 import com.example.shopofmasters.models.Person;
 import com.example.shopofmasters.repositories.PersonRepository;
+import com.example.shopofmasters.security.PersonDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
 @Service
 public class PersonService {
     private final PersonRepository personRepository;
@@ -51,13 +55,6 @@ public class PersonService {
     @Transactional
     public void rolePerson(Person person) {
         personRepository.findById(person.getId()).ifPresent(i -> {
-            i.setFirstName(person.getFirstName());
-            i.setLastName(person.getLastName());
-            i.setPatronymic(person.getPatronymic());
-            i.setAge(person.getAge());
-            i.setTelephone(person.getTelephone());
-            i.setDateBirth(person.getDateBirth());
-            i.setBiography(person.getBiography());
             i.setRole(person.getRole());
             personRepository.save(i);
         });
@@ -83,4 +80,16 @@ public class PersonService {
             i.setConfirmed(person.getConfirmed());
         });
     }
+
+
+    @Transactional
+    public int personIdSecurityContextHolder(){
+        // Извлекаем объект аутентифицированного пользователя
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        PersonDetails personDetails = (PersonDetails) authentication.getPrincipal();
+        // Извлекаем id пользователя из объекта
+        int id = personDetails.getPerson().getId();
+        return id;
+    }
+
 }
