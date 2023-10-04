@@ -18,7 +18,7 @@ public class Image {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Product product;
 
-    public Image(int id, String fileName, Product product) {
+    public Image(String fileName, Product product) {
         this.id = id;
         this.fileName = fileName;
         this.product = product;

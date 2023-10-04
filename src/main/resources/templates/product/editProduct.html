@@ -61,7 +61,24 @@
     <textarea th:field="*{seller}" placeholder="Продавец" id="seller"></textarea>
     <div class="error"  th:if="${#fields.hasErrors('seller')}" th:errors="*{seller}"></div>
     <br>
-    <button type="submit" >Добавить</button>
+    <div class="div-image" th:each="img : ${product.getImageList()}">
+      <img class="image" th:src="'/img/' + ${img.getFileName()}">
+    </div>
+    <br>
+    <div style="clear: left">
+      <p class="error">Вы можете добавить до 5 фотографий.</p>
+      <input type="file" name="file_one">
+      <br>
+      <input type="file" name="file_two">
+      <br>
+      <input type="file" name="file_three">
+      <br>
+      <input type="file" name="file_four">
+      <br>
+      <input type="file" name="file_five">
+      <br>
+      <button type="submit" style="clear: left">Добавить</button>
+    </div>
   </form>
 </main>
 <footer>

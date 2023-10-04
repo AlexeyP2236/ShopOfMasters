@@ -4,7 +4,6 @@ import com.example.shopofmasters.models.Category;
 import com.example.shopofmasters.models.Order;
 import com.example.shopofmasters.models.Person;
 import com.example.shopofmasters.models.Product;
-import com.example.shopofmasters.repositories.CategoryRepository;
 import com.example.shopofmasters.services.CategoryService;
 import com.example.shopofmasters.services.OrdersService;
 import com.example.shopofmasters.services.PersonService;
@@ -27,14 +26,12 @@ public class AdminController {
     private final OrdersService ordersService;
     private final PersonService personService;
     private final CategoryService categoryService;
-    private final CategoryRepository categoryRepository;
 
-    public AdminController(ProductService productService, OrdersService ordersService, PersonService personService, CategoryService categoryService, CategoryRepository categoryRepository) {
+    public AdminController(ProductService productService, OrdersService ordersService, PersonService personService, CategoryService categoryService) {
         this.productService = productService;
         this.ordersService = ordersService;
         this.personService = personService;
         this.categoryService = categoryService;
-        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping("/admin")
@@ -57,34 +54,36 @@ public class AdminController {
     @PostMapping("/admin/product/add")
     public String addProduct(@ModelAttribute("product") @Valid Product product, BindingResult bindingResult,
                              //принятие файлов
-                             @RequestParam("file_one")MultipartFile file_one, @RequestParam("file_two")MultipartFile file_two, @RequestParam("file_three")MultipartFile file_three, @RequestParam("file_four")MultipartFile file_four, @RequestParam("file_five")MultipartFile file_five,
+                             @RequestParam("file_one")MultipartFile file_one,
+                             @RequestParam("file_two")MultipartFile file_two,
+                             @RequestParam("file_three")MultipartFile file_three,
+                             @RequestParam("file_four")MultipartFile file_four,
+                             @RequestParam("file_five")MultipartFile file_five,
                              //принятие категории
-                             @RequestParam("category") int category, Model model)
+                             @RequestParam("category") Category category, Model model)
             //исключение
             throws IOException {
-        Category category_db = (Category) categoryRepository.findById(category).orElseThrow();
-        //System.out.println(category_db.getName());
+        model.addAttribute("category", categoryService.getAllCategory());
         if(bindingResult.hasErrors()){
-            model.addAttribute("category", categoryService.getAllCategory());
             return "product/addProduct";
         }
         //Добавление и проверка файла
-        if(file_one != null){
+        if(!file_one.isEmpty()){
             productService.addPhotoFile(file_one, product);
         }
-        if(file_two != null){
+        if(!file_two.isEmpty()){
             productService.addPhotoFile(file_two, product);
         }
-        if(file_three != null){
+        if(!file_three.isEmpty()){
             productService.addPhotoFile(file_three, product);
         }
-        if(file_four != null){
+        if(!file_four.isEmpty()){
             productService.addPhotoFile(file_four, product);
         }
-        if(file_five != null){
+        if(!file_five.isEmpty()){
             productService.addPhotoFile(file_five, product);
         }
-        productService.saveProduct(product, category_db);
+        productService.saveProduct(product, category);
         return "redirect:/admin";
     }
 
@@ -100,16 +99,36 @@ public class AdminController {
     public String editProduct(Model model, @PathVariable("id") int id){
         //получение тавара по id
         model.addAttribute("product", productService.getProductId(id));
-        model.addAttribute("category", categoryRepository.findAll());
+        model.addAttribute("category", categoryService.getAllCategory());
         return "product/editProduct";
     }
 
     @PostMapping("admin/product/edit/{id}")
-    public String editProduct(@ModelAttribute("product") @Valid Product product, BindingResult bindingResult, @PathVariable("id") int id, Model model){
+    public String editProduct(@ModelAttribute("product") @Valid Product product, BindingResult bindingResult, @PathVariable("id") int id,
+                              @RequestParam("file_one")MultipartFile file_one,
+                              @RequestParam("file_two")MultipartFile file_two,
+                              @RequestParam("file_three")MultipartFile file_three,
+                              @RequestParam("file_four")MultipartFile file_four,
+                              @RequestParam("file_five")MultipartFile file_five) throws IOException {
         //проверка товара на ощибки и возврат на страницу редактирования если они имеются
         if(bindingResult.hasErrors()){
-            model.addAttribute("category", categoryRepository.findAll());
             return "product/editProduct";
+        }
+        //Добавление и проверка файла
+        if(!file_one.isEmpty()){
+            productService.updatePhotoFile(id, product, file_one);
+        }
+        if(!file_two.isEmpty()){
+            productService.updatePhotoFile(id, product, file_two);
+        }
+        if(!file_three.isEmpty()){
+            productService.updatePhotoFile(id, product, file_three);
+        }
+        if(!file_four.isEmpty()){
+            productService.updatePhotoFile(id, product, file_four);
+        }
+        if(!file_five.isEmpty()){
+            productService.updatePhotoFile(id, product, file_five);
         }
         productService.updateProduct(id, product);
         return "redirect:/admin";
